@@ -1,0 +1,36 @@
+server:
+  port: 8085
+
+spring:
+  application.name: transaction
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari.connectionTimeout: 10000
+    hikari.maximumPoolSize: 5
+  jpa:
+    hibernate.ddl-auto: update
+  kafka:
+    consumer:
+      bootstrap-server: kafka-server:9092
+      group-id: myGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      bootstrap-server: kafka-server:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+app:
+  db.init.enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus

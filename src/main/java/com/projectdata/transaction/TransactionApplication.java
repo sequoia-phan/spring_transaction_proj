@@ -1,15 +1,19 @@
 package com.projectdata.transaction;
 
-import com.projectdata.transaction.repository.UserRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class TransactionApplication {
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(TransactionApplication.class, args);
-        UserRepository userRepository = context.getBean(UserRepository.class);
+
+        Dotenv dotenv = Dotenv.load();
+        System.setProperty("DB_URL", dotenv.get("DB_URL"));
+        System.setProperty("DB_USER", dotenv.get("DB_USER"));
+        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+
+        SpringApplication.run(TransactionApplication.class, args);
 
         System.out.println("...Running....");
     }

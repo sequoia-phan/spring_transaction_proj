@@ -1,25 +1,17 @@
 package com.projectdata.transaction.exception.common;
 
 import com.projectdata.transaction.exception.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
+import com.projectdata.transaction.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
-public class BadRequestException implements ApiException {
+public class BadRequestException extends BaseException implements ApiException {
 
-    private String message;
-
-    public BadRequestException(String message) {
-        this.message = message;
+    public BadRequestException(String message, String path) {
+        super(message, HttpStatus.BAD_REQUEST, path);
     }
 
     @Override
     public HttpStatus getStatus() {
         return HttpStatus.BAD_REQUEST;
-    }
-
-    @Override
-    public String path(@NonNull HttpServletRequest request) {
-        return request.getRequestURI();
     }
 }

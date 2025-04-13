@@ -1,15 +1,13 @@
 package com.projectdata.transaction.exception.common;
 
 import com.projectdata.transaction.exception.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
+import com.projectdata.transaction.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
-public class NotFoundException implements ApiException {
-    private String message;
+public class NotFoundException extends BaseException implements ApiException {
 
-    public NotFoundException(String message) {
-        this.message = message;
+    public NotFoundException(String message, String path) {
+        super(message, HttpStatus.NOT_FOUND, path);
     }
 
     @Override
@@ -17,8 +15,4 @@ public class NotFoundException implements ApiException {
         return HttpStatus.NOT_FOUND;
     }
 
-    @Override
-    public String path(@NonNull HttpServletRequest request) {
-        return request.getRequestURI();
-    }
 }

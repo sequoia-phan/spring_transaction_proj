@@ -1,7 +1,9 @@
 package com.projectdata.transaction.controller;
 
+import com.projectdata.transaction.exception.common.NotFoundException;
 import com.projectdata.transaction.model.User;
 import com.projectdata.transaction.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{id}")
-    public Optional<User> findById(@PathVariable Long id) {
-        return userService.findById(id);
+    public User findById(@PathVariable Long id, HttpServletRequest request) {
+        Optional<User> user = userService.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new NotFoundException("User with ID " + id + " not found", request.getRequestURI());
+        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

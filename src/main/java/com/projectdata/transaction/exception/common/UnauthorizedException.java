@@ -1,24 +1,17 @@
 package com.projectdata.transaction.exception.common;
 
 import com.projectdata.transaction.exception.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
+import com.projectdata.transaction.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
-public class UnauthorizedException implements ApiException {
-    private String message;
+public class UnauthorizedException extends BaseException implements ApiException {
 
-    public UnauthorizedException(String message) {
-        this.message = message;
+    public UnauthorizedException(String message, String path) {
+        super(message, HttpStatus.UNAUTHORIZED, path);
     }
 
     @Override
     public HttpStatus getStatus() {
         return HttpStatus.UNAUTHORIZED;
-    }
-
-    @Override
-    public String path(@NonNull HttpServletRequest request) {
-        return request.getRequestURI();
     }
 }
