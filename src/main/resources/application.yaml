@@ -13,7 +13,7 @@ spring:
     hibernate.ddl-auto: update
   kafka:
     consumer:
-      bootstrap-server: kafka-server:9092
+      bootstrap-server: ${KAFKA_SERVER}
       group-id: myGroup
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -21,7 +21,7 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
     producer:
-      bootstrap-server: kafka-server:9092
+      bootstrap-server: ${KAFKA_SERVER}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
