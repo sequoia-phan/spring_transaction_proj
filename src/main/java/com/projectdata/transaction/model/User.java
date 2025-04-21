@@ -10,9 +10,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Builder
 public class User implements Serializable {
     @Id
     @Column(name = "id")
