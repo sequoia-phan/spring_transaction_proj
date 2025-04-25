@@ -9,6 +9,15 @@ spring:
     password: ${DB_PASSWORD}
     hikari.connectionTimeout: 10000
     hikari.maximumPoolSize: 5
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      database: ${MONGO_DB} # if it does not exist, will create one
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resource:
+      add-mappings: false
   jpa:
     hibernate.ddl-auto: update
   kafka:
@@ -27,6 +36,20 @@ spring:
 
 app:
   db.init.enabled: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+
+# Blockchain RPC configuration
+blockchain:
+  rpc:
+    ethereum: ${BLOCKCHAIN_RPC_ETHEREUM}
+    solana: ${BLOCKCHAIN_RPC_SOLANA}
+    bsc: ${BLOCKCHAIN_RPC_BSC}
+    sui: ${BLOCKCHAIN_RPC_SUI}
+  polling:
+    interval: ${BLOCKCHAIN_POLLING_INTERVAL}
 
 # Prometheus endpoint configuration
 management:

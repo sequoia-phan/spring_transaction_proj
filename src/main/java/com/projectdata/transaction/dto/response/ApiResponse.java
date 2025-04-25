@@ -12,23 +12,32 @@ import lombok.experimental.SuperBuilder;
 public class ApiResponse<T> extends BaseResponse {
     private T data;
 
-    public static <T> ApiResponse<T> success(T data, String path) {
+    public static <T> ApiResponse<T> success(T data, String path, HttpStatus httpStatus) {
         return ApiResponse.<T>builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.CREATED)
+                .status(httpStatus.value())
                 .message("Success")
                 .path(path)
                 .data(data)
                 .build();
     }
 
-    public static <T> ApiResponse<T> success(T data, String path, String message) {
+    public static <T> ApiResponse<T> success(T data, String path, String message, HttpStatus httpStatus) {
         return ApiResponse.<T>builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.CREATED)
+                .status(httpStatus.value())
                 .message(message)
                 .path(path)
                 .data(data)
+                .build();
+    }
+    
+    public static <T> ApiResponse<T> error(String message, String path, HttpStatus httpStatus) {
+        return ApiResponse.<T>builder()
+                .timestamp(LocalDateTime.now())
+                .status(httpStatus.value())
+                .message(message)
+                .path(path)
                 .build();
     }
 }

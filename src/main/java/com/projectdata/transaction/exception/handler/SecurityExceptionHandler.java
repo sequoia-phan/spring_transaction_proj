@@ -2,16 +2,13 @@ package com.projectdata.transaction.exception.handler;
 
 import java.util.UUID;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.projectdata.transaction.exception.BaseException;
 import com.projectdata.transaction.exception.model.ApiError;
-import com.projectdata.transaction.exception.core.SecurityException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

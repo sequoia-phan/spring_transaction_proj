@@ -13,6 +13,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+/*
+ * This plays as a DTO, ApiError DTOs
+ */
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)

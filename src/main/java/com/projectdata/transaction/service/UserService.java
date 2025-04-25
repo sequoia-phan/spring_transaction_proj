@@ -3,6 +3,8 @@ package com.projectdata.transaction.service;
 import com.projectdata.transaction.model.User;
 import com.projectdata.transaction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public Page<User> findAllPaginated(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
@@ -31,8 +37,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<User> findByUserName(String userName) {
+    public Optional<User> findByUserName(String userName) {
         return userRepository.findByUserName(userName);
+    }
+    
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
 

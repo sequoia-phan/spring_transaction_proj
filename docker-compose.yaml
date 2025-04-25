@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  app:
+    container_name: transaction-app
+    build: .
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres
+      - prometheus
+    environment:
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+    volumes:
+      - '/:/host:rw'
+
+  postgres:
+    container_name: transaction-pgsql
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5430:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  prometheus:
+    container_name: transaction-prometheus
+    image:  prom/prometheus:v3.3.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yaml
+      - ./prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    container_name: transaction-grafana
+    image: grafana/grafana:11.6.0-ubuntu
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+
+volumes:
+  pgdata:

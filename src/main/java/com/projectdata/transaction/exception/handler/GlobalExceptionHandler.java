@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +25,47 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiError> handleNoHandlerFoundException(NoHandlerFoundException ex,
+            HttpServletRequest request) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .message("The requested resource was not found")
+                .path(request.getRequestURI())
+                .traceId(generateTraceId())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+            HttpServletRequest request) {
+        String paramName = ex.getName();
+        String invalidValue = ex.getValue() != null ? ex.getValue().toString() : "null";
+        String message = String.format("Parameter '%s' with value '%s' is invalid", paramName, invalidValue);
+
+        List<ValidationError> validationErrors = List.of(
+                ValidationError.builder()
+                        .field(paramName)
+                        .message("Invalid parameter type")
+                        .build());
+
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(message)
+                .path(request.getRequestURI())
+                .traceId(generateTraceId())
+                .validationErrors(validationErrors)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ApiError> handleBaseException(BaseException ex, HttpServletRequest req) {
@@ -86,7 +129,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleValidationErrors(MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
         String traceId = generateTraceId();
         log.error("Validation error - TraceId: {}", traceId, ex);
 

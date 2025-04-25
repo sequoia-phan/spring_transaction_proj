@@ -1,16 +1,24 @@
 package com.projectdata.transaction.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class User implements Serializable {
     @Id
@@ -21,7 +29,7 @@ public class User implements Serializable {
     @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -43,5 +51,3 @@ public class User implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 }
-
-
